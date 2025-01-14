@@ -1,0 +1,4 @@
+{
+    "venue_static_info_url": "https://consumer-api.development.dev.woltapi.com/home-assignment-api/v1/venues/${VENUE SLUG}/static", 
+    "venue_dynamic_info_url": "https://consumer-api.development.dev.woltapi.com/home-assignment-api/v1/venues/${VENUE SLUG}/dynamic"
+}
