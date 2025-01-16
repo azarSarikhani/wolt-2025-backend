@@ -22,3 +22,4 @@ class Venue:
             auth_header = get_token()
             s.headers.update(auth_header)
         self.session = s
+
