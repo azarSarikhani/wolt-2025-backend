@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: dopc
+Version: 0.0.1
+Summary: Delivery Order Price Calculator service
+Home-page: 
+Author: 
+Author-email: 
+Requires-Dist: requests==2.31.0
+Requires-Dist: StrEnum==0.4.15
