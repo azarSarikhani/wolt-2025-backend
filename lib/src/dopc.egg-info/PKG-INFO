@@ -7,3 +7,4 @@ Author:
 Author-email: 
 Requires-Dist: requests==2.31.0
 Requires-Dist: StrEnum==0.4.15
+Requires-Dist: pip-system-certs==4.0
