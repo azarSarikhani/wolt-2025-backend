@@ -11,12 +11,10 @@ from logging import Logger
 from dopc.tools.logs import getConsoleLoger
 
 
-DEFAULT_TIMEOUT:int = 5  # seconds
+DEFAULT_TIMEOUT: int = 5  # seconds
 venueLogger: Logger = getConsoleLoger('venue')
 
-
-
-def handle_failed_response(response: Response, url: str) -> NoReturn|dict:
+def handle_failed_response(response: Response, url: str) -> NoReturn| dict:
     if response.status_code in [404]:
         venueLogger.error(response.text)
         venueLogger.error(f'failed getting venue info from {url}')
@@ -52,6 +50,7 @@ class Venue:
             allowed_methods=["GET"],
             backoff_factor=2
         )
+
         adapter = TimeoutHTTPAdapter(max_retries=retry_strategy)
         s.mount('https://', adapter)
         s.mount('http://', adapter)
@@ -59,7 +58,8 @@ class Venue:
             auth_header = venueAuth.get_token()
             s.headers.update(auth_header)
         self.session = s
-    def getDynamicIfo(self) ->  list[dict]:
+
+    def getDynamicIfo(self) -> list[dict]:
         dynamic_url = self.dynamic_url
         response = self.session.request("GET", url=dynamic_url)
         #response = requests.request("GET", dynamic_url)
@@ -68,6 +68,7 @@ class Venue:
         else:
             values = handle_failed_response(response, dynamic_url)
         return values
+
     def getStaticicIfo(self) ->  list[dict]:
         dynamic_url = self.static_url
         response = self.session.request("GET", url=static_url)
