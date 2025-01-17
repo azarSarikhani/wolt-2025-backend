@@ -78,3 +78,6 @@ class Venue:
             handle_failed_response(response, static_url)
         return values
 
+    def parseDynamicInfo(self, input):
+        pass
+
