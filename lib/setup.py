@@ -8,7 +8,7 @@ setup(
     author='',
     author_email='',
     url='',
-    install_requires=['requests==2.31.0', 'StrEnum==0.4.15', 'pip-system-certs==4.0'],
+    install_requires=['requests==2.31.0', 'StrEnum==0.4.15'],
     packages=find_packages(where='src'),
     package_dir={'': 'src'}
 )

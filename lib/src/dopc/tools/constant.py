@@ -12,5 +12,6 @@ class VenueDynamicPath(Enum):
     BASE_PRICE = ["venue_raw" , "delivery_specs" , "delivery_pricing" , "base_price"]
     DISTANCE_RANGES = ["venue_raw" , "delivery_specs" , "delivery_pricing" , "distance_ranges"]
 
+
 class VenueStaticPath(Enum):
     COORDINATES = ["venue_raw" , "location" , "coordinates"]

@@ -1,8 +1,0 @@
-setup.py
-src/dopc/__init__.py
-src/dopc/app.py
-src/dopc.egg-info/PKG-INFO
-src/dopc.egg-info/SOURCES.txt
-src/dopc.egg-info/dependency_links.txt
-src/dopc.egg-info/requires.txt
-src/dopc.egg-info/top_level.txt

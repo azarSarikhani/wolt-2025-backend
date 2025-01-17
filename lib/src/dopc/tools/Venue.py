@@ -6,7 +6,7 @@ from requests.packages.urllib3.util.retry import Retry  # type: ignore
 from typing import NoReturn
 
 from dopc.tools.venueAuth import venueAuth
-from dopc.tools.constant import VenueBaseUrl
+from dopc.tools.constant import VenueBaseUrl, VenueDynamicPath, VenueStaticPath
 from logging import Logger
 from dopc.tools.logs import getConsoleLoger
 
@@ -23,6 +23,15 @@ def handle_failed_response(response: Response, url: str) -> NoReturn | dict:
     else:
         venueLogger.error(f'failed getting venue info from {url}')
         raise Exception('failed getting venue info from {url}')
+
+
+def get_nested_dict(_input: dict, keys: [list]):
+    try:
+        for key in keys:
+            _input = _input.get(key)
+    except AttributeError:
+         _input = None
+    return _input
 
 
 class TimeoutHTTPAdapter(HTTPAdapter):
@@ -62,23 +71,46 @@ class Venue:
 
     def getDynamicIfo(self) -> list[dict]:
         dynamic_url = self.dynamic_url
-        response = self.session.request("GET", url=dynamic_url)
-#response = requests.request("GET", dynamic_url)
+        response = self.session.request("GET", url=dynamic_url, verify=False)
         if response.status_code == 200:
-            values = json.loads(response.text).get("venue")
+            values = json.loads(response.text)
         else:
             values = handle_failed_response(response, dynamic_url)
         return values
 
     def getStaticicIfo(self) -> list[dict]:
         static_url = self.static_url
-        response = self.session.request("GET", url=static_url)
-#response = requests.request("GET", dynamic_url)
+        response = self.session.request("GET", url=static_url, verify=False)
         if response.status_code == 200:
-            values = json.loads(response.text).get("venue")
+            values = json.loads(response.text)
         else:
             handle_failed_response(response, static_url)
         return values
 
-    def parseDynamicInfo(self, input):
-        pass
+    def parseVenueDynamicInfo(self, response_dict: dict):
+        parsed_info: dict = {}
+        items_to_collect = [
+             VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE,
+             VenueDynamicPath.BASE_PRICE,
+             VenueDynamicPath.DISTANCE_RANGES
+        ]
+        #order_minimum_no_surcharge_name = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.name
+        #order_minimum_no_surcharge_keys = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.value
+        #base_price_keys = VenueDynamicPath.BASE_PRICE.value
+        #distance_ranges_keys = VenueDynamicPath.DISTANCE_RANGES.value
+        for item in items_to_collect:
+            #return parsed_info[item.name: 2]
+            value = get_nested_dict(response_dict, item.value)
+            if value:
+                parsed_info.update({item.name: value})
+
+        #min_order = get_nested_dict(response_dict, order_minimum_no_surcharge_keys)
+        #base_price = get_nested_dict(response_dict, base_price_keys)
+        #distance_ranges = get_nested_dict(response_dict, distance_ranges_keys)
+
+        #parsed_info = {
+        #    "order_minimum_no_surcharge": min_order,
+        #    "base_price": base_price,
+        #    "distance_ranges": distance_ranges
+        #}
+        return parsed_info
