@@ -8,5 +8,9 @@ class VenueBaseUrl(StrEnum):
 
 
 class VenueDynamicPath(Enum):
-    MINIMUM_NO_SURCHARGE = ["venue_raw","delivery_specs","rder_minimum_no_surcharge"]
+    ORDER_MINIMUM_NO_SURCHARGE = ["venue_raw", "delivery_specs", "order_minimum_no_surcharge"]
+    BASE_PRICE = ["venue_raw" , "delivery_specs" , "delivery_pricing" , "base_price"]
+    DISTANCE_RANGES = ["venue_raw" , "delivery_specs" , "delivery_pricing" , "distance_ranges"]
 
+class VenueStaticPath(Enum):
+    COORDINATES = ["venue_raw" , "location" , "coordinates"]

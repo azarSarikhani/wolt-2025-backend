@@ -14,7 +14,8 @@ from dopc.tools.logs import getConsoleLoger
 DEFAULT_TIMEOUT: int = 5  # seconds
 venueLogger: Logger = getConsoleLoger('venue')
 
-def handle_failed_response(response: Response, url: str) -> NoReturn| dict:
+
+def handle_failed_response(response: Response, url: str) -> NoReturn | dict:
     if response.status_code in [404]:
         venueLogger.error(response.text)
         venueLogger.error(f'failed getting venue info from {url}')
@@ -62,17 +63,17 @@ class Venue:
     def getDynamicIfo(self) -> list[dict]:
         dynamic_url = self.dynamic_url
         response = self.session.request("GET", url=dynamic_url)
-        #response = requests.request("GET", dynamic_url)
+#response = requests.request("GET", dynamic_url)
         if response.status_code == 200:
             values = json.loads(response.text).get("venue")
         else:
             values = handle_failed_response(response, dynamic_url)
         return values
 
-    def getStaticicIfo(self) ->  list[dict]:
-        dynamic_url = self.static_url
+    def getStaticicIfo(self) -> list[dict]:
+        static_url = self.static_url
         response = self.session.request("GET", url=static_url)
-        #response = requests.request("GET", dynamic_url)
+#response = requests.request("GET", dynamic_url)
         if response.status_code == 200:
             values = json.loads(response.text).get("venue")
         else:
@@ -81,4 +82,3 @@ class Venue:
 
     def parseDynamicInfo(self, input):
         pass
-
