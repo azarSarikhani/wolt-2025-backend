@@ -38,8 +38,6 @@ jobs:
           which python
           pip install nox
 
-
-
       - name: Print Working Directory
         run: pwd
 
