@@ -1,0 +1,51 @@
+name: Test and build API
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13' 
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Print Versions
+        run: |
+          echo "Printing versions:"
+          echo "python version:"
+          python --version
+          echo "pip version:"
+          pip --version
+          lsb_release -a
+
+      - name: Set up virtual environment
+        run: |
+          mkdir venv
+          python3 -m venv venv/wolt-2025
+          source venv/wolt-2025/bin/activate
+          which python
+          pip install nox
+
+
+
+      - name: Print Working Directory
+        run: pwd
+
+      - name: run tests
+        run: |
+          source venv/wolt-2025/bin/activate
+          nox
+
+        
