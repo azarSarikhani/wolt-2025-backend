@@ -16,11 +16,11 @@ venueLogger: Logger = getConsoleLoger('venue')
 
 
 
-def handle_failed_response(response: Response, url: str) -> NoReturn:
-    if response.status_code in [401, 403]:
+def handle_failed_response(response: Response, url: str) -> NoReturn|dict:
+    if response.status_code in [404]:
         venueLogger.error(response.text)
         venueLogger.error(f'failed getting venue info from {url}')
-        raise Exception('failed getting venue info from {url}')
+        return {'msge': f'failed getting venue info from {url}'}
     else:
         venueLogger.error(f'failed getting venue info from {url}')
         raise Exception('failed getting venue info from {url}')
@@ -66,7 +66,7 @@ class Venue:
         if response.status_code == 200:
             values = json.loads(response.text).get("venue")
         else:
-            handle_failed_response(response, dynamic_url)
+            values= handle_failed_response(response, dynamic_url)
         return values
     def getStaticicIfo(self) ->  list[dict]:
         dynamic_url = self.static_url
