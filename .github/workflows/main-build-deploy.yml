@@ -1,4 +1,4 @@
-name: Parse Unity Logs
+name: Test and build API
 on:
   workflow_dispatch:
   push:
@@ -44,6 +44,8 @@ jobs:
         run: pwd
 
       - name: run tests
-        run: nox
+        run: |
+          source venv/wolt-2025/bin/activate
+          nox
 
         
