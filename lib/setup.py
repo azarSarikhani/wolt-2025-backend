@@ -14,7 +14,8 @@ setup(
                       'pydantic-settings==2.1.0',
                       'pydantic_core==2.14.3',
                       'uvicorn==0.24.0.post1',
-                      'httpx==0.25.1'],
+                      'httpx==0.25.1',
+                      'geopy==2.4.1'],
     packages=find_packages(where='src'),
     package_dir={'': 'src'}
 )
