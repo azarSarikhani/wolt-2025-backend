@@ -25,7 +25,7 @@ def handle_failed_response(response: Response, url: str) -> NoReturn | dict:
         raise Exception('failed getting venue info from {url}')
 
 
-def get_nested_dict(_input: dict, keys: [list]):
+def get_nested_dict(_input: dict, keys: [list]) -> None | int | list:
     try:
         for key in keys:
             _input = _input.get(key)
@@ -52,7 +52,7 @@ class TimeoutHTTPAdapter(HTTPAdapter):
 class Venue:
     def __init__(self, venue_slug: str) -> None:
         self.dynamic_url = VenueBaseUrl.DYNAMIC_URL.format(VENUE_SLUG=venue_slug)
-        self.static_url = VenueBaseUrl.DYNAMIC_URL.format(VENUE_SLUG=venue_slug)
+        self.static_url = VenueBaseUrl.STATIC_URL.format(VENUE_SLUG=venue_slug)
         s = requests.Session()
         retry_strategy = Retry(
             total=5,
@@ -94,23 +94,20 @@ class Venue:
              VenueDynamicPath.BASE_PRICE,
              VenueDynamicPath.DISTANCE_RANGES
         ]
-        #order_minimum_no_surcharge_name = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.name
-        #order_minimum_no_surcharge_keys = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.value
-        #base_price_keys = VenueDynamicPath.BASE_PRICE.value
-        #distance_ranges_keys = VenueDynamicPath.DISTANCE_RANGES.value
         for item in items_to_collect:
-            #return parsed_info[item.name: 2]
             value = get_nested_dict(response_dict, item.value)
             if value:
                 parsed_info.update({item.name: value})
+        return parsed_info
 
-        #min_order = get_nested_dict(response_dict, order_minimum_no_surcharge_keys)
-        #base_price = get_nested_dict(response_dict, base_price_keys)
-        #distance_ranges = get_nested_dict(response_dict, distance_ranges_keys)
 
-        #parsed_info = {
-        #    "order_minimum_no_surcharge": min_order,
-        #    "base_price": base_price,
-        #    "distance_ranges": distance_ranges
-        #}
+    def parseVenueStaticInfo(self, response_dict: dict):
+        parsed_info: dict = {}
+        items_to_collect = [
+            VenueStaticPath.COORDINATES
+        ]
+        for item in items_to_collect:
+            value = get_nested_dict(response_dict, item.value)
+            if value:
+                parsed_info.update({item.name: value})
         return parsed_info

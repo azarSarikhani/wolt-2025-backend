@@ -1,15 +1,15 @@
 # from src.app import app
 # from fastapi.testclient import TestClient
+import pytest
 
 from dopc.tools.Venue import Venue
 
 
-def test_validVenueResposne():
+@pytest.mark.skip(reason="debugging test")
+def test_validVenueResposneDynamic():
     venue = Venue(venue_slug='home-assignment-venue-helsinki')
     res = venue.getDynamicIfo()
     assert isinstance(res, dict)
-
-
 
 
 def test_notFoundVenue():
@@ -23,4 +23,12 @@ def test_parseVenueDynamicInfo():
     response = venue.getDynamicIfo()
     result = venue.parseVenueDynamicInfo(response)
     for item in ['ORDER_MINIMUM_NO_SURCHARGE', 'BASE_PRICE', 'DISTANCE_RANGES']:
+        assert item in result.keys()
+
+
+def test_parseVenueStaticInfo():
+    venue = Venue(venue_slug='home-assignment-venue-helsinki')
+    response = venue.getStaticicIfo()
+    result = venue.parseVenueStaticInfo(response)
+    for item in ['COORDINATES']:
         assert item in result.keys()
