@@ -1,7 +1,6 @@
 import logging
 import uvicorn
 from typing import Annotated
-#from tools.priceCalculator import priceCalculator
 from dopc.tools.responseSchemas import SuccessfulFeeCalculationResposneSchema, HTTPError
 from fastapi import FastAPI, HTTPException, Query
 
@@ -13,16 +12,17 @@ app = FastAPI(title="Delivery fee calculator app",
 
 
 @app.get("/api/v1/delivery-order-price",
-          responses={200: {"model": SuccessfulFeeCalculationResposneSchema},
+         responses={200: {"model": SuccessfulFeeCalculationResposneSchema},
                     400: {"model": HTTPError,
-                           "description": "delivery is not possible"},
+                          "description": "delivery is not possible"},
                     422: {"model": HTTPError, "description": "Validation error for query parameters"},
                     500: {"model": HTTPError,
-                           "description": "In case something goes wrong"}})
-def calculate_delivery_fee(venue_slug: Annotated[str, Query(min_length=1, description="The venue slug must be a non-empty string")],
-    						cart_value: Annotated[int, Query(ge=0, description="The total value of the cart, must be a positive integer")],
-    						user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude, between -90 and 90 degrees")],
-   							user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude, between -180 and 180 degrees")] ):
+                          "description": "In case something goes wrong"}})
+def calculate_delivery_fee(
+    					  venue_slug: Annotated[str, Query(min_length=1, description="The venue slug must be a non-empty string")],
+    					  cart_value: Annotated[int, Query(ge=0, description="The total value of the cart, must be a positive integer")],
+    					  user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude, between -90 and 90 degrees")],
+   						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude, between -180 and 180 degrees")] ):
     try:
         fee = 100
         # calculate_fee()

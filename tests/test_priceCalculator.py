@@ -9,9 +9,6 @@ def test_geoDistance():
     distance = geoDistance(coord1, coord2)
     assert distance == 0
 
-#lat=60.17094&user_lon=24.93087
-#24.92813512,60.17012143
-
     coord1 = (60.17094, 24.93087)
     coord2 = (60.17012143, 24.92813512)
 
