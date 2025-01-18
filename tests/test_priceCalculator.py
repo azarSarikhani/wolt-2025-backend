@@ -1,6 +1,12 @@
 import pytest
 
-from dopc.tools.priceCalculator import geoDistance
+from dopc.tools.priceCalculator import geoDistance, getRangesParams
+
+cases = [
+    {"distance" : 100, "expected_params": (0, 0, 500)},
+    {"distance" : 500, "expected_params": (100, 1, 1000)},
+    {"distance" : 1000, "expected_params": (0, 0, 0)}
+]
 
 def test_geoDistance():
     coord1 = (60.17094, 24.93087)
@@ -16,3 +22,29 @@ def test_geoDistance():
     distance = geoDistance(coord1, coord2)
 
     assert distance == expected_distance
+
+@pytest.mark.parametrize("cases", cases)   
+def test_rangesParams(cases):
+    distance = cases.get("distance")
+    expected_params = cases.get("expected_params")
+    distance_ranges = [{
+			"min": 0,
+			"max": 500,
+			"a": 0,
+			"b": 0,
+		},
+		{
+			"min": 500,
+			"max": 1000,
+			"a": 100,
+			"b": 1,
+		},
+		{
+			"min": 1000,
+			"max": 0,
+			"a": 0,
+			"b": 0,
+		}
+	]
+    assert expected_params == getRangesParams(distance, distance_ranges)
+    
