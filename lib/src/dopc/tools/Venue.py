@@ -30,7 +30,7 @@ def get_nested_dict(_input: dict, keys: [list]):
         for key in keys:
             _input = _input.get(key)
     except AttributeError:
-         _input = None
+        _input = None
     return _input
 
 
@@ -94,23 +94,22 @@ class Venue:
              VenueDynamicPath.BASE_PRICE,
              VenueDynamicPath.DISTANCE_RANGES
         ]
-        #order_minimum_no_surcharge_name = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.name
-        #order_minimum_no_surcharge_keys = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.value
-        #base_price_keys = VenueDynamicPath.BASE_PRICE.value
-        #distance_ranges_keys = VenueDynamicPath.DISTANCE_RANGES.value
+# order_minimum_no_surcharge_name = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.name
+# order_minimum_no_surcharge_keys = VenueDynamicPath.ORDER_MINIMUM_NO_SURCHARGE.value
+# base_price_keys = VenueDynamicPath.BASE_PRICE.value
+# distance_ranges_keys = VenueDynamicPath.DISTANCE_RANGES.value
         for item in items_to_collect:
-            #return parsed_info[item.name: 2]
+            # return parsed_info[item.name: 2]
             value = get_nested_dict(response_dict, item.value)
             if value:
                 parsed_info.update({item.name: value})
 
-        #min_order = get_nested_dict(response_dict, order_minimum_no_surcharge_keys)
-        #base_price = get_nested_dict(response_dict, base_price_keys)
-        #distance_ranges = get_nested_dict(response_dict, distance_ranges_keys)
-
-        #parsed_info = {
-        #    "order_minimum_no_surcharge": min_order,
-        #    "base_price": base_price,
-        #    "distance_ranges": distance_ranges
-        #}
+# min_order = get_nested_dict(response_dict, order_minimum_no_surcharge_keys)
+# base_price = get_nested_dict(response_dict, base_price_keys)
+# distance_ranges = get_nested_dict(response_dict, distance_ranges_keys
+# parsed_info = {
+#     "order_minimum_no_surcharge": min_order,
+#     "base_price": base_price,
+#     "distance_ranges": distance_ranges
+# }
         return parsed_info

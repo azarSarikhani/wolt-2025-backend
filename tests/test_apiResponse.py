@@ -10,12 +10,10 @@ def test_validVenueResposne():
     assert isinstance(res, dict)
 
 
-
-
 def test_notFoundVenue():
     venue = Venue(venue_slug='home-assignment-venue-planet-shlorp')
     res = venue.getDynamicIfo()
-    assert res=={'msge': f'failed getting venue info from {venue.dynamic_url}'}
+    assert res == {'msge': f'failed getting venue info from {venue.dynamic_url}'}
 
 
 def test_parseVenueDynamicInfo():
