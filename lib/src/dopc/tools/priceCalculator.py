@@ -10,8 +10,8 @@ query_inputs = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 10
 
 
 
-def geoDistance(coord1: tuple, coords2: tuple) -> float:
-    distance = geopy.distance.geodesic(coords_1, coords_2).m
+def geoDistance(coord1: tuple, coord2: tuple) -> float:
+    distance = geopy.distance.geodesic(coord1, coord2).m
     #d = norm(np.cross(p2-p1, p1-p3))/norm(p2-p1)
     return int(np.round(distance))
 
@@ -30,7 +30,3 @@ def __call__(query_inputs: dict,
     y2 =  staticInfo.get('COORDINATES')[0]
     distance = geoDistance((x1, y1), (x2, y2))
     return {'price': 10}
-
-
-# Rejected: https://peps.python.org/pep-0713/
-sys.modules[__name__] = __call__
