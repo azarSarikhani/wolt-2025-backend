@@ -2,8 +2,7 @@ from pydantic import BaseModel, Field
 
 
 class SuccessfulFeeCalculationResposneSchema(BaseModel):
-    delivery_fee: int = Field(description="Calculated delivery fee in the \
-    lowest denomination of the local currency.")
+    result: dict = Field(description="details")
 
 
 class HTTPError(BaseModel):

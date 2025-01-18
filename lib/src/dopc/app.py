@@ -1,6 +1,7 @@
 import logging
 import uvicorn
 from typing import Annotated
+from dopc.tools.Venue import Venue
 from dopc.tools.responseSchemas import SuccessfulFeeCalculationResposneSchema, HTTPError
 from fastapi import FastAPI, HTTPException, Query
 
@@ -24,7 +25,24 @@ def calculate_delivery_fee(
     					  user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude, between -90 and 90 degrees")],
    						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude, between -180 and 180 degrees")] ):
     try:
-        fee = 100
+        query_inputs = {'venue_slug': venue_slug, 'cart_value': cart_value, 'user_lat': user_lat, user_lon: 'user_lon'}
+        venue = Venue(venue_slug=query_inputs.get('venue_slug'))
+        response_dynamic = venue.getDynamicIfo()
+        dynamicInfo= venue.parseVenueDynamicInfo(response_dynamic)
+        response_static = venue.getStaticicIfo()
+        staticInfo= venue.parseVenueStaticInfo(response_static)
+        distance , delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
+        if delivery_price:
+            result = {
+                "total_price": cart_value + delivery_price,
+                "small_order_surcharge": 'todo',
+                "cart_value": cart_value,
+                "delivery": {
+                    "fee": delivery_price,
+                    "distance": distance
+                }
+            }
+        return SuccessfulFeeCalculationResposneSchema(result=result)
         # calculate_fee()
     except Exception as e:
         logging.error(e)

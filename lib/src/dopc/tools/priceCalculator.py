@@ -4,12 +4,6 @@ import geopy.distance
 from dopc.tools.Venue import Venue
 
 
-
-query_inputs = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 1000, 'user_lat':60.17094, 'user_lon': 24.93087}
-
-
-
-
 def geoDistance(coord1: tuple, coord2: tuple) -> float:
     distance = geopy.distance.geodesic(coord1, coord2).m
     return int(np.round(distance))
@@ -25,13 +19,12 @@ def getRangesParams(distance: int, ranges: list ) -> tuple[int]:
 
 def priceCalculator(query_inputs: dict,
             static_info: dict,
-            dynamic_info: dict) -> dict[str, float]:
-    venue = Venue(venue_slug=query_inputs.get('venue_slug'))
-    response_dynamic = venue.getDynamicIfo()
-    dynamicInfo= venue.parseVenueDynamicInfo(response_dynamic)
-
-    response_static = venue.getStaticicIfo()
-    staticInfo= venue.parseVenueStaticInfo(response_static)
+            dynamic_info: dict) -> tuple:
+    # venue = Venue(venue_slug=query_inputs.get('venue_slug'))
+    # response_dynamic = venue.getDynamicIfo()
+    # dynamicInfo= venue.parseVenueDynamicInfo(response_dynamic)
+    # response_static = venue.getStaticicIfo()
+    # staticInfo= venue.parseVenueStaticInfo(response_static)
     x1 = query_inputs.get('user_lat')
     y1 = query_inputs.get('user_lon')
     x2 = staticInfo.get('COORDINATES')[1]
@@ -41,5 +34,9 @@ def priceCalculator(query_inputs: dict,
     base_price = dynamicInfo.get('BASE_PRICE')
     distance_ranges = dynamicInfo.get('DISTANCE_RANGES')
     a, b, _max = getRangesParams(distance, distance_ranges)
-    price = base_price + a + b * distance / 10
-    return {'price': price}
+    if _max == 0:
+        price = None
+    else:
+        price = base_price + a + b * distance / 10
+
+    return distance, price
