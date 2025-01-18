@@ -14,9 +14,10 @@ app = FastAPI(title="Delivery fee calculator app",
 
 @app.get("/api/v1/delivery-order-price",
           responses={200: {"model": SuccessfulFeeCalculationResposneSchema},
-                     400: {"model": HTTPError,
+                    400: {"model": HTTPError,
                            "description": "delivery is not possible"},
-                     500: {"model": HTTPError,
+                    422: {"model": HTTPError, "description": "Validation error for query parameters"},
+                    500: {"model": HTTPError,
                            "description": "In case something goes wrong"}})
 def calculate_delivery_fee(venue_slug: Annotated[str, Query(min_length=1, description="The venue slug must be a non-empty string")],
     						cart_value: Annotated[int, Query(ge=0, description="The total value of the cart, must be a positive integer")],

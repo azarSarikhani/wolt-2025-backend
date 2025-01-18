@@ -12,7 +12,7 @@ def test_validRequestResponseSchema():
     assert response.status_code == 200
     assert response.json().get("delivery_fee") != None  # noqa: E711
 
-def test_invalidQueryParam():
+def test_invalidQueryParam1():
     response = client.get('/api/v1/delivery-order-price', 
                params = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2, 'user_lat':'invalid latitude', 'user_lon': 3.1})
     assert response.status_code == 422
@@ -40,3 +40,11 @@ def test_invalid_http_method():
         json={"venue_slug": "valid-slug", "cart_value": 100, "user_lat": 60.192059, "user_lon": 24.945831},
     )
     assert response.status_code == 405
+
+def test_invalidQueryParam2():
+    response = client.get(
+        "/api/v1/delivery-order-price",
+        params={"venue_slug": 4, "cart_value": 2, "user_lat": "invalid latitude", "user_lon": 3.1},
+    )
+    assert response.status_code == 422
+    assert "detail" in response.json()
