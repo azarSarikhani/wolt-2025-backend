@@ -1,34 +1,12 @@
-# from src.app import app
-# from fastapi.testclient import TestClient
 import pytest
+from fastapi.testclient import TestClient
 
-from dopc.tools.Venue import Venue
-
-
-@pytest.mark.skip(reason="debugging test")
-def test_validVenueResposneDynamic():
-    venue = Venue(venue_slug='home-assignment-venue-helsinki')
-    res = venue.getDynamicIfo()
-    assert isinstance(res, dict)
+from dopc.app import app
 
 
-def test_notFoundVenue():
-    venue = Venue(venue_slug='home-assignment-venue-planet-shlorp')
-    res = venue.getDynamicIfo()
-    assert res=={'msge': f'failed getting venue info from {venue.dynamic_url}'}
+client = TestClient(app)
 
-
-def test_parseVenueDynamicInfo():
-    venue = Venue(venue_slug='home-assignment-venue-helsinki')
-    response = venue.getDynamicIfo()
-    result = venue.parseVenueDynamicInfo(response)
-    for item in ['ORDER_MINIMUM_NO_SURCHARGE', 'BASE_PRICE', 'DISTANCE_RANGES']:
-        assert item in result.keys()
-
-
-def test_parseVenueStaticInfo():
-    venue = Venue(venue_slug='home-assignment-venue-helsinki')
-    response = venue.getStaticicIfo()
-    result = venue.parseVenueStaticInfo(response)
-    for item in ['COORDINATES']:
-        assert item in result.keys()
+def test_validRequestResponseSchema():
+    response = client.get("/api/v1/delivery-order-price")
+    assert response.status_code == 200
+    assert response.json().get("delivery_fee") != None  # noqa: E711
