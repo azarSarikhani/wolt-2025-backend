@@ -12,21 +12,34 @@ query_inputs = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 10
 
 def geoDistance(coord1: tuple, coord2: tuple) -> float:
     distance = geopy.distance.geodesic(coord1, coord2).m
-    #d = norm(np.cross(p2-p1, p1-p3))/norm(p2-p1)
     return int(np.round(distance))
 
-def __call__(query_inputs: dict,
+
+def getRangesParams(distance: int, ranges: list ) -> tuple[int]:
+    for item in ranges:
+        if distance >= item.get('min') and  distance < item.get('max'):
+            params = (item.get('a'), item.get('b'), item.get('max'))
+            return params
+    return (0, 0, 0)
+
+
+def priceCalculator(query_inputs: dict,
             static_info: dict,
             dynamic_info: dict) -> dict[str, float]:
     venue = Venue(venue_slug=query_inputs.get('venue_slug'))
-    response = venue.getDynamicIfo()
-    dynamicInfo= venue.parseVenueDynamicInfo(response)
+    response_dynamic = venue.getDynamicIfo()
+    dynamicInfo= venue.parseVenueDynamicInfo(response_dynamic)
 
-    response = venue.getStaticicIfo()
-    staticInfo= venue.parseVenueStaticInfo(response)
+    response_static = venue.getStaticicIfo()
+    staticInfo= venue.parseVenueStaticInfo(response_static)
     x1 = query_inputs.get('user_lat')
     y1 = query_inputs.get('user_lon')
     x2 = staticInfo.get('COORDINATES')[1]
     y2 =  staticInfo.get('COORDINATES')[0]
     distance = geoDistance((x1, y1), (x2, y2))
-    return {'price': 10}
+
+    base_price = dynamicInfo.get('BASE_PRICE')
+    distance_ranges = dynamicInfo.get('DISTANCE_RANGES')
+    a, b, _max = getRangesParams(distance, distance_ranges)
+    price = base_price + a + b * distance / 10
+    return {'price': price}
