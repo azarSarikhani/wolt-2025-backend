@@ -17,7 +17,8 @@ app = FastAPI(title="Delivery fee calculator app",
                            "description": "delivery is not possible"},
                      500: {"model": HTTPError,
                            "description": "In case something goes wrong"}})
-def calculate_delivery_fee():
+def calculate_delivery_fee(venue_slug: str, cart_value:int,
+                           user_lat:float, user_lon: float ):
     try:
         fee = 100
         # calculate_fee()
