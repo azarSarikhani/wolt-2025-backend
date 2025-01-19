@@ -1,13 +1,14 @@
 import logging
 import uvicorn
 import numpy as np
+from logging import Logger
 from typing import Annotated
+from fastapi import FastAPI, HTTPException, Query, status
 from dopc.tools.Venue import Venue
 from dopc.tools.logs import getConsoleLoger
 from dopc.tools.priceCalculator import priceCalculator
-from dopc.tools.responseSchemas import ResponseItem, HTTPError
-from fastapi import FastAPI, HTTPException, Query, status
-from logging import Logger
+from dopc.tools.responseSchemas import ResponseItem, InternalError, BadRequest, ValidationError
+from dopc.tools.venuSchemas import StaticInfo, DynamicInfo
 
 appLogger: Logger = getConsoleLoger('app')
 
@@ -20,17 +21,17 @@ app = FastAPI(title="Delivery fee calculator app",
 def queryVenue(query_inputs: dict) -> tuple[dict]:
     venue = Venue(venue_slug=query_inputs.get('venue_slug'))
     response_dynamic = venue.getDynamicIfo()
-    dynamic_info= venue.parseVenueDynamicInfo(response_dynamic)
+    dynamic_info: DynamicInfo = venue.parseVenueDynamicInfo(response_dynamic)
     response_static = venue.getStaticicIfo()
-    static_info= venue.parseVenueStaticInfo(response_static)
+    static_info: StaticInfo = venue.parseVenueStaticInfo(response_static)
     return dynamic_info, static_info
 
 @app.get("/api/v1/delivery-order-price",
          responses={200: {"model": ResponseItem},
-                    400: {"model": HTTPError,
+                    400: {"model": BadRequest,
                           "description": "delivery is not possible"},
-                    422: {"model": HTTPError, "description": "Validation error for query parameters"},
-                    500: {"model": HTTPError,
+                    422: {"model": ValidationError, "description": "Validation error for query parameters"},
+                    500: {"model": InternalError,
                           "description": "In case something goes wrong"}})
 def calculate_delivery_fee(
     					  venue_slug: Annotated[str, Query(min_length=1, description="The venue slug must be a non-empty string")],

@@ -14,12 +14,34 @@ class ResponseItem(BaseModel):
     cart_value: int = Field(description="cart value")
     delivery: Delivery
 
-class HTTPError(BaseModel):
+class InternalError(BaseModel):
     detail: str
     model_config = {
         "json_schema_extra": {
             "examples": [{
                 "detail": "What a Terrible Failure"
+            }]
+        }
+    }
+
+
+class BadRequest(BaseModel):
+    detail: str
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{
+                "detail": "delivery is not possible"
+            }]
+        }
+    }
+
+
+class ValidationError(BaseModel):
+    detail: str
+    model_config = {
+        "json_schema_extra": {
+            "examples": [{
+                "detail": "Input parameter not valid"
             }]
         }
     }
