@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from dopc.app import app
+from app.app import app
 
 
 client = TestClient(app)
