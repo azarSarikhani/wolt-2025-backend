@@ -1,0 +1,41 @@
+{
+    "ORDER_MINIMUM_NO_SURCHARGE": 1000,
+    "BASE_PRICE": 190,
+    "DISTANCE_RANGES": [
+        {
+            "min": 0,
+            "max": 500,
+            "a": 0,
+            "b": 0.0,
+            "flag": null
+        },
+        {
+            "min": 500,
+            "max": 1000,
+            "a": 100,
+            "b": 0.0,
+            "flag": null
+        },
+        {
+            "min": 1000,
+            "max": 1500,
+            "a": 200,
+            "b": 0.0,
+            "flag": null
+        },
+        {
+            "min": 1500,
+            "max": 2000,
+            "a": 200,
+            "b": 1.0,
+            "flag": null
+        },
+        {
+            "min": 2000,
+            "max": 0,
+            "a": 0,
+            "b": 0.0,
+            "flag": null
+        }
+    ]
+}

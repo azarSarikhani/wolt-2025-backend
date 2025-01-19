@@ -1,10 +1,16 @@
 import logging
 import uvicorn
+import numpy as np
 from typing import Annotated
 from dopc.tools.Venue import Venue
+from dopc.tools.logs import getConsoleLoger
+from dopc.tools.priceCalculator import priceCalculator
 from dopc.tools.responseSchemas import SuccessfulFeeCalculationResposneSchema, HTTPError
 from fastapi import FastAPI, HTTPException, Query
+from logging import Logger
 
+
+appLogger: Logger = getConsoleLoger('app')
 
 app = FastAPI(title="Delivery fee calculator app",
               description="Delivery fee calculator app with fastAPI",
@@ -25,32 +31,32 @@ def calculate_delivery_fee(
     					  user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude, between -90 and 90 degrees")],
    						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude, between -180 and 180 degrees")] ):
     try:
-        query_inputs = {'venue_slug': venue_slug, 'cart_value': cart_value, 'user_lat': user_lat, user_lon: 'user_lon'}
+        query_inputs = {'venue_slug': venue_slug, 'cart_value': cart_value, 'user_lat': user_lat, 'user_lon': user_lon}
         venue = Venue(venue_slug=query_inputs.get('venue_slug'))
         response_dynamic = venue.getDynamicIfo()
-        dynamicInfo= venue.parseVenueDynamicInfo(response_dynamic)
+        dynamic_info= venue.parseVenueDynamicInfo(response_dynamic)
         response_static = venue.getStaticicIfo()
-        staticInfo= venue.parseVenueStaticInfo(response_static)
+        static_info= venue.parseVenueStaticInfo(response_static)
         distance , delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
+        small_order_surcharge = dynamic_info.get('ORDER_MINIMUM_NO_SURCHARGE') -  query_inputs.get('cart_value')
         if delivery_price:
             result = {
                 "total_price": cart_value + delivery_price,
-                "small_order_surcharge": 'todo',
+                "small_order_surcharge": max(small_order_surcharge, 0),
                 "cart_value": cart_value,
                 "delivery": {
                     "fee": delivery_price,
                     "distance": distance
                 }
             }
-        return SuccessfulFeeCalculationResposneSchema(result=result)
+            return result
         # calculate_fee()
     except Exception as e:
-        logging.error(e)
+        appLogger.error(e)
         raise HTTPException(
             status_code=500,
             detail="A Terrible Failure happened in calculating the fee"
         )
-    return SuccessfulFeeCalculationResposneSchema(delivery_fee=fee)
 
 
 if __name__ == "__main__":

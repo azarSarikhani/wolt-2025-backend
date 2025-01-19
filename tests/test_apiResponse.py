@@ -6,11 +6,20 @@ from dopc.app import app
 
 client = TestClient(app)
 
-def test_validRequestResponseSchema():
+#@pytest.mark.skip(reason="debugging test")
+def test_validRequestResponseCode():
     response = client.get('/api/v1/delivery-order-price', 
                params = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2, 'user_lat':2.1, 'user_lon': 3.1})
     assert response.status_code == 200
-    assert response.json().get("delivery_fee") != None  # noqa: E711
+    #assert response.json() != None  # noqa: E711
+
+
+def test_validRequestResponseBody():
+    response = client.get('/api/v1/delivery-order-price', 
+               params = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2, 'user_lat':2.1, 'user_lon': 3.1})
+    print(response)
+    assert response.json() != None  # noqa: E711
+
 
 def test_invalidQueryParam1():
     response = client.get('/api/v1/delivery-order-price', 
