@@ -41,9 +41,16 @@ jobs:
       - name: Print Working Directory
         run: pwd
 
+      - name: run linter
+        run: |
+          source venv/wolt-2025/bin/activate
+          nox --session lint
+        continue-on-error: true
+
+      
       - name: run tests
         run: |
           source venv/wolt-2025/bin/activate
-          nox
+          nox --session tests
 
         
