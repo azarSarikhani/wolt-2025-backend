@@ -1,13 +1,14 @@
 import logging
 import uvicorn
 import numpy as np
+from logging import Logger
 from typing import Annotated
+from fastapi import FastAPI, HTTPException, Query, status
 from dopc.tools.Venue import Venue
 from dopc.tools.logs import getConsoleLoger
 from dopc.tools.priceCalculator import priceCalculator
 from dopc.tools.responseSchemas import ResponseItem, HTTPError
-from fastapi import FastAPI, HTTPException, Query, status
-from logging import Logger
+from dopc.tools.venuSchemas import SttaicInfo
 
 appLogger: Logger = getConsoleLoger('app')
 
@@ -20,9 +21,9 @@ app = FastAPI(title="Delivery fee calculator app",
 def queryVenue(query_inputs: dict) -> tuple[dict]:
     venue = Venue(venue_slug=query_inputs.get('venue_slug'))
     response_dynamic = venue.getDynamicIfo()
-    dynamic_info= venue.parseVenueDynamicInfo(response_dynamic)
+    dynamic_info = venue.parseVenueDynamicInfo(response_dynamic)
     response_static = venue.getStaticicIfo()
-    static_info= venue.parseVenueStaticInfo(response_static)
+    static_info: SttaicInfo = venue.parseVenueStaticInfo(response_static)
     return dynamic_info, static_info
 
 @app.get("/api/v1/delivery-order-price",
