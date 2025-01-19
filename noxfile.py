@@ -2,6 +2,12 @@ import nox
 
 
 @nox.session
+def typecheck(session):
+    session.install("mypy", "pylint", "requests")
+    session.run('mypy', 'lib/src/')
+
+
+@nox.session
 def tests(session):
     session.install('pytest')
     session.run("python", "-m", "pip", "install", "-e", "lib")
