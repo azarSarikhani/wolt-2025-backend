@@ -60,7 +60,7 @@ def calculate_delivery_fee(
                     delivery=result.get('delivery')
                 )
         else:
-            raise BadRequest(
+            raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail='delivery not possible, distance is too long'
             )            
