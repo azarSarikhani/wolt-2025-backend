@@ -7,10 +7,16 @@ from dopc.app import app
 client = TestClient(app)
 
 #@pytest.mark.skip(reason="debugging test")
-def test_validRequestResponseCode():
+def test_badRequestResponseCode():
     response = client.get('/api/v1/delivery-order-price', 
                params = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2, 'user_lat':2.1, 'user_lon': 3.1})
-    assert response.status_code == 200
+    assert response.status_code == 400
+
+
+def test_validRequestResponseBody():
+    response = client.get('/api/v1/delivery-order-price', 
+               params = {'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2, 'user_lat':60.17094, 'user_lon': 24.93087})
+    assert response.status_code == 400
 
 
 def test_validRequestResponseBody():

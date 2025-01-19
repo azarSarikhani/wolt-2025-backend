@@ -6,7 +6,7 @@ from dopc.tools.Venue import Venue
 from dopc.tools.logs import getConsoleLoger
 from dopc.tools.priceCalculator import priceCalculator
 from dopc.tools.responseSchemas import ResponseItem, HTTPError
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, status
 from logging import Logger
 
 
@@ -17,6 +17,14 @@ app = FastAPI(title="Delivery fee calculator app",
               summary="Delivery fee calculator app with fastAPI",
               version="1.0.0")
 
+
+def queryVenue(query_inputs: dict) -> tuple[dict]:
+    venue = Venue(venue_slug=query_inputs.get('venue_slug'))
+    response_dynamic = venue.getDynamicIfo()
+    dynamic_info= venue.parseVenueDynamicInfo(response_dynamic)
+    response_static = venue.getStaticicIfo()
+    static_info= venue.parseVenueStaticInfo(response_static)
+    return dynamic_info, static_info
 
 @app.get("/api/v1/delivery-order-price",
          responses={200: {"model": ResponseItem},
@@ -32,11 +40,7 @@ def calculate_delivery_fee(
    						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude, between -180 and 180 degrees")] ):
     try:
         query_inputs = {'venue_slug': venue_slug, 'cart_value': cart_value, 'user_lat': user_lat, 'user_lon': user_lon}
-        venue = Venue(venue_slug=query_inputs.get('venue_slug'))
-        response_dynamic = venue.getDynamicIfo()
-        dynamic_info= venue.parseVenueDynamicInfo(response_dynamic)
-        response_static = venue.getStaticicIfo()
-        static_info= venue.parseVenueStaticInfo(response_static)
+        dynamic_info, static_info = queryVenue(query_inputs)
         distance , delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
         small_order_surcharge = dynamic_info.get('ORDER_MINIMUM_NO_SURCHARGE') -  query_inputs.get('cart_value')
         if delivery_price:
@@ -55,15 +59,24 @@ def calculate_delivery_fee(
                     cart_value=result.get('cart_value'),
                     delivery=result.get('delivery')
                 )
-            
-        # calculate_fee()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='delivery not possible, distance is too long'
+            )            
     except Exception as e:
-        appLogger.error(e)
-        raise HTTPException(
-            status_code=500,
-            detail="A Terrible Failure happened in calculating the fee"
-        )
-
+        if not isinstance(e, HTTPException):
+            appLogger.error(e)
+            raise HTTPException(
+                status_code=500,
+                detail="A Terrible Failure happened in calculating the fee"
+            )
+        else:
+            appLogger.error(e)
+            raise HTTPException(
+                status_code=e.status_code,
+                detail=e.detail
+            )
 
 if __name__ == "__main__":
     print("this function is happy to be called directly.")
