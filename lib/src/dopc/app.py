@@ -9,7 +9,6 @@ from dopc.tools.responseSchemas import ResponseItem, HTTPError
 from fastapi import FastAPI, HTTPException, Query, status
 from logging import Logger
 
-
 appLogger: Logger = getConsoleLoger('app')
 
 app = FastAPI(title="Delivery fee calculator app",

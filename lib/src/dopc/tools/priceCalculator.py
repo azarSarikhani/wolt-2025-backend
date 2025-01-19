@@ -23,11 +23,6 @@ def getRangesParams(distance: int, ranges: list ) -> tuple[int]:
 def priceCalculator(query_inputs: dict,
             static_info: dict,
             dynamic_info: dict) -> tuple:
-    # venue = Venue(venue_slug=query_inputs.get('venue_slug'))
-    # response_dynamic = venue.getDynamicIfo()
-    # dynamicInfo= venue.parseVenueDynamicInfo(response_dynamic)
-    # response_static = venue.getStaticicIfo()
-    # staticInfo= venue.parseVenueStaticInfo(response_static)
     x1 = query_inputs.get('user_lat')
     y1 = query_inputs.get('user_lon')
     x2 = static_info.get('COORDINATES')[1]
@@ -42,6 +37,4 @@ def priceCalculator(query_inputs: dict,
         return distance, price
     else:
         price = base_price + a + b * distance / 10
-        calculatorLogger.error(distance)
-        calculatorLogger.error(price)
         return distance, np.round(price)

@@ -71,7 +71,7 @@ class Venue:
 
     def getDynamicIfo(self) -> list[dict]:
         dynamic_url = self.dynamic_url
-        response = self.session.request("GET", url=dynamic_url, verify=False)
+        response = self.session.request("GET", url=dynamic_url, verify=True)
         if response.status_code == 200:
             values = json.loads(response.text)
         else:
@@ -80,7 +80,7 @@ class Venue:
 
     def getStaticicIfo(self) -> list[dict]:
         static_url = self.static_url
-        response = self.session.request("GET", url=static_url, verify=False)
+        response = self.session.request("GET", url=static_url, verify=True)
         if response.status_code == 200:
             values = json.loads(response.text)
         else:
