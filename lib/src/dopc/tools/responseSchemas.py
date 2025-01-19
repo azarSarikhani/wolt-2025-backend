@@ -1,9 +1,18 @@
 from pydantic import BaseModel, Field
 
 
-class SuccessfulFeeCalculationResposneSchema(BaseModel):
-    result: dict = Field(description="details")
 
+
+class Delivery(BaseModel):
+    fee: int
+    distance: int
+
+
+class ResponseItem(BaseModel):
+    total_price: int = Field(description="total price")
+    small_order_surcharge: int = Field(description="small order surcharge")
+    cart_value: int = Field(description="cart value")
+    delivery: Delivery
 
 class HTTPError(BaseModel):
     detail: str

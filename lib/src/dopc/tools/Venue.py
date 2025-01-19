@@ -3,7 +3,7 @@ import requests  # type: ignore
 from requests import Response  # type: ignore
 from requests.adapters import HTTPAdapter  # type: ignore
 from requests.packages.urllib3.util.retry import Retry  # type: ignore
-from typing import NoReturn
+from typing import NoReturn, Any
 
 from dopc.tools.venueAuth import venueAuth
 from dopc.tools.constant import VenueBaseUrl, VenueDynamicPath, VenueStaticPath
@@ -25,7 +25,7 @@ def handle_failed_response(response: Response, url: str) -> NoReturn | dict:
         raise Exception('failed getting venue info from {url}')
 
 
-def get_nested_dict(_input: dict, keys: [list]) -> None | int | list:
+def get_nested_dict(_input: dict, keys: [list]) -> Any:
     try:
         for key in keys:
             _input = _input.get(key)

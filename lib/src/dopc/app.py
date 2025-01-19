@@ -5,7 +5,7 @@ from typing import Annotated
 from dopc.tools.Venue import Venue
 from dopc.tools.logs import getConsoleLoger
 from dopc.tools.priceCalculator import priceCalculator
-from dopc.tools.responseSchemas import SuccessfulFeeCalculationResposneSchema, HTTPError
+from dopc.tools.responseSchemas import ResponseItem, HTTPError
 from fastapi import FastAPI, HTTPException, Query
 from logging import Logger
 
@@ -19,7 +19,7 @@ app = FastAPI(title="Delivery fee calculator app",
 
 
 @app.get("/api/v1/delivery-order-price",
-         responses={200: {"model": SuccessfulFeeCalculationResposneSchema},
+         responses={200: {"model": ResponseItem},
                     400: {"model": HTTPError,
                           "description": "delivery is not possible"},
                     422: {"model": HTTPError, "description": "Validation error for query parameters"},
@@ -49,7 +49,13 @@ def calculate_delivery_fee(
                     "distance": distance
                 }
             }
-            return result
+            return ResponseItem(
+                    total_price=result.get('total_price'),
+                    small_order_surcharge=result.get('small_order_surcharge'),
+                    cart_value=result.get('cart_value'),
+                    delivery=result.get('delivery')
+                )
+            
         # calculate_fee()
     except Exception as e:
         appLogger.error(e)
