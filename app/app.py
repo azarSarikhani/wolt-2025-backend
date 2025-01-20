@@ -22,7 +22,6 @@ def queryVenue(query_inputs: dict) -> tuple[dict] | tuple[str]:
     response_dynamic = venue.getDynamicIfo()
     if response_dynamic.get('error_message'):
         appLogger.error(response_dynamic)
-        appLogger.error('888888')
         return ('bad slug', 'no info')
     dynamic_info: DynamicInfo = venue.parseVenueDynamicInfo(response_dynamic)
     response_static = venue.getStaticicIfo()
@@ -53,7 +52,6 @@ def calculate_delivery_fee(
                 detail='bad venue slug'
             )
         else:
-            print('88888')
             dynamic_info = venue_details[0]
             static_info = venue_details[1]
 

@@ -76,7 +76,6 @@ jobs:
           source venv/wolt-2025/bin/activate
           which python
           python -m pip install -e lib
-          #pip install -r requirements.txt
 
       - name: Test run the app
         run: |
