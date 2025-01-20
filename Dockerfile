@@ -1,15 +1,13 @@
 FROM python:3.11-slim
 
-RUN pip install --no-cache-dir nox
+COPY app /home/app
 
 COPY lib /home/lib
 
-COPY tests /home/tests
+RUN python -m pip install -e /home/lib
 
-COPY ./.flake8 /home/.flake8
-
-COPY ./noxfile.py /home/noxfile.py
+EXPOSE 8080
 
 WORKDIR /home
 
-CMD [ "nox" ]
+CMD [ "python", "app/app.py" ]
