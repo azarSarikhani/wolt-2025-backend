@@ -7,26 +7,27 @@ from dopc.tools.logs import getConsoleLoger
 
 calculatorLogger: Logger = getConsoleLoger('app')
 
+
 def geoDistance(coord1: tuple, coord2: tuple) -> float:
     distance = geopy.distance.geodesic(coord1, coord2).m
     return int(np.round(distance))
 
 
-def getRangesParams(distance: int, ranges: list ) -> tuple[int]:
+def getRangesParams(distance: int, ranges: list) -> tuple[int]:
     for item in ranges:
-        if distance >= item.get('min') and  distance < item.get('max'):
+        if distance >= item.get('min') and distance < item.get('max'):
             params = (item.get('a'), item.get('b'), item.get('max'))
             return params
     return (0, 0, 0)
 
 
 def priceCalculator(query_inputs: dict,
-            static_info: dict,
-            dynamic_info: dict) -> tuple:
+                    static_info: dict,
+                    dynamic_info: dict) -> tuple:
     x1 = query_inputs.get('user_lat')
     y1 = query_inputs.get('user_lon')
     x2 = static_info.get('COORDINATES')[1]
-    y2 =  static_info.get('COORDINATES')[0]
+    y2 = static_info.get('COORDINATES')[0]
     distance = geoDistance((x1, y1), (x2, y2))
 
     base_price = dynamic_info.get('BASE_PRICE')

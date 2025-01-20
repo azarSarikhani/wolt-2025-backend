@@ -1,8 +1,6 @@
 from pydantic import BaseModel, Field
 
 
-
-
 class Delivery(BaseModel):
     fee: int
     distance: int
@@ -13,6 +11,7 @@ class ResponseItem(BaseModel):
     small_order_surcharge: int = Field(description="small order surcharge")
     cart_value: int = Field(description="cart value")
     delivery: Delivery
+
 
 class InternalError(BaseModel):
     detail: str

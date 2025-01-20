@@ -3,7 +3,8 @@ import nox
 
 @nox.session
 def typecheck(session):
-    session.install("mypy==1.14.1","mypy-extensions==1.0.0", "pylint", "requests", 'pydantic==2.5.1', 'pydantic-extra-types==2.1.0', 'StrEnum==0.4.15')
+    session.install("mypy==1.14.1", "mypy-extensions==1.0.0", "pylint", "requests", 'pydantic==2.5.1',
+                    'pydantic-extra-types==2.1.0', 'StrEnum==0.4.15')
     session.run('mypy', 'lib/src/')
 
 
