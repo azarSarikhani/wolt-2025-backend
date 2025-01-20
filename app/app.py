@@ -1,6 +1,4 @@
-import logging
 import uvicorn
-import numpy as np
 from logging import Logger
 from typing import Annotated
 from fastapi import FastAPI, HTTPException, Query, status
@@ -26,6 +24,7 @@ def queryVenue(query_inputs: dict) -> tuple[dict]:
     static_info: StaticInfo = venue.parseVenueStaticInfo(response_static)
     return dynamic_info, static_info
 
+
 @app.get("/api/v1/delivery-order-price",
          responses={200: {"model": ResponseItem},
                     400: {"model": BadRequest,
@@ -34,10 +33,10 @@ def queryVenue(query_inputs: dict) -> tuple[dict]:
                     500: {"model": InternalError,
                           "description": "In case something goes wrong"}})
 def calculate_delivery_fee(
-    					  venue_slug: Annotated[str, Query(min_length=1, description="The venue slug must be a non-empty string")],
-    					  cart_value: Annotated[int, Query(ge=0, description="The total value of the cart, must be a positive integer")],
-    					  user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude, between -90 and 90 degrees")],
-   						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude, between -180 and 180 degrees")] ):
+                          venue_slug: Annotated[str, Query(min_length=1, description="The venue slug")],
+    					  cart_value: Annotated[int, Query(ge=0, description="The total value of the cart")],
+    					  user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude")],
+   						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude")] ):
     try:
         query_inputs = {'venue_slug': venue_slug, 'cart_value': cart_value, 'user_lat': user_lat, 'user_lon': user_lon}
         dynamic_info, static_info = queryVenue(query_inputs)

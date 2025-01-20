@@ -25,7 +25,7 @@ def handle_failed_response(response: Response, url: str) -> NoReturn | dict:
         raise Exception('failed getting venue info from {url}')
 
 
-def get_nested_dict(_input: dict, keys: list) -> Any:
+def get_nested_dict(_input: dict, keys: list) -> Any | None:
     try:
         for key in keys:
             _input = _input.get(key)
