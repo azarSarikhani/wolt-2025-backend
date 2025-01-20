@@ -81,7 +81,7 @@ jobs:
       - name: Test run the app
         run: |
           source venv/wolt-2025/bin/activate
-          python app/app.py
+          python app/app.py &
           APP_PID=$!  
           sleep 10    
           if kill -0 $APP_PID 2>/dev/null; then
