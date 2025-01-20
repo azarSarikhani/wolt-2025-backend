@@ -53,4 +53,30 @@ jobs:
           source venv/wolt-2025/bin/activate
           nox --session tests
 
-        
+  run-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11' 
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Print Working Directory
+        run: pwd
+
+      - name: Set up virtual environment
+        run: |
+          mkdir venv
+          python3 -m venv venv/wolt-2025
+          source venv/wolt-2025/bin/activate
+          which python
+          python -m pip install -e lib
+
+      - name: Run app
+        run: |
+          source venv/bin/activate
+          python app/app.py
