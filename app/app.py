@@ -54,11 +54,11 @@ def calculate_delivery_fee(
             )
         else:
             print('88888')
-            dynamic_info  = venue_details[0]
+            dynamic_info = venue_details[0]
             static_info = venue_details[1]
 
-        distance , delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
-        small_order_surcharge = dynamic_info.get('ORDER_MINIMUM_NO_SURCHARGE') -  query_inputs.get('cart_value')
+        distance, delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
+        small_order_surcharge = dynamic_info.get('ORDER_MINIMUM_NO_SURCHARGE') - query_inputs.get('cart_value')
         if delivery_price:
             result = {
                 "total_price": cart_value + delivery_price,
