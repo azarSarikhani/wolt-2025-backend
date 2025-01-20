@@ -18,9 +18,14 @@ app = FastAPI(title="Delivery fee calculator app",
               version="1.0.0")
 
 
-def queryVenue(query_inputs: dict) -> tuple[dict]:
-    venue = Venue(venue_slug=query_inputs.get('venue_slug'))
+def queryVenue(query_inputs: dict) -> tuple[dict] | tuple[str]:
+    venue_slug = query_inputs.get('venue_slug')
+    venue = Venue(venue_slug=venue_slug)
     response_dynamic = venue.getDynamicIfo()
+    if response_dynamic.get('error_message'):
+        appLogger.error(response_dynamic)
+        appLogger.error('888888')
+        return ('bad slug', 'no info')
     dynamic_info: DynamicInfo = venue.parseVenueDynamicInfo(response_dynamic)
     response_static = venue.getStaticicIfo()
     static_info: StaticInfo = venue.parseVenueStaticInfo(response_static)
@@ -40,7 +45,19 @@ def calculate_delivery_fee(
    						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude, between -180 and 180 degrees")] ):
     try:
         query_inputs = {'venue_slug': venue_slug, 'cart_value': cart_value, 'user_lat': user_lat, 'user_lon': user_lon}
-        dynamic_info, static_info = queryVenue(query_inputs)
+        venue_details = queryVenue(query_inputs)
+        appLogger.error(venue_details)
+        # dynamic_info, static_info = queryVenue(query_inputs)
+        if 'bad slug' in venue_details:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail='bad venue slug'
+            )
+        else:
+            print('88888')
+            dynamic_info  = venue_details[0]
+            static_info = venue_details[1]
+
         distance , delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
         small_order_surcharge = dynamic_info.get('ORDER_MINIMUM_NO_SURCHARGE') -  query_inputs.get('cart_value')
         if delivery_price:

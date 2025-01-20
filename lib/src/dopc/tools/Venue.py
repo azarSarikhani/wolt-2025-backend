@@ -19,7 +19,7 @@ def handle_failed_response(response: Response, url: str) -> NoReturn | dict:
     if response.status_code in [404]:
         venueLogger.error(response.text)
         venueLogger.error(f'failed getting venue info from {url}')
-        return {'msge': f'failed getting venue info from {url}'}
+        return {'error_message': f'failed getting venue info from {url}'}
     else:
         venueLogger.error(f'failed getting venue info from {url}')
         raise Exception('failed getting venue info from {url}')
@@ -71,7 +71,7 @@ class Venue:
 
     def getDynamicIfo(self) -> list[dict]:
         dynamic_url = self.dynamic_url
-        response = self.session.request("GET", url=dynamic_url, verify=True)
+        response = self.session.request("GET", url=dynamic_url, verify=False)
         if response.status_code == 200:
             values = json.loads(response.text)
         else:
@@ -80,11 +80,11 @@ class Venue:
 
     def getStaticicIfo(self) -> list[dict]:
         static_url = self.static_url
-        response = self.session.request("GET", url=static_url, verify=True)
+        response = self.session.request("GET", url=static_url, verify=False)
         if response.status_code == 200:
             values = json.loads(response.text)
         else:
-            handle_failed_response(response, static_url)
+            values = handle_failed_response(response, static_url)
         return values
 
     def parseVenueDynamicInfo(self, response_dict: dict):
