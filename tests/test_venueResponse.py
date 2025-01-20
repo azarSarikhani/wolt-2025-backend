@@ -3,7 +3,6 @@ import pytest
 from dopc.tools.Venue import Venue
 
 
-@pytest.mark.skip(reason="debugging test")
 def test_validVenueResposneDynamic():
     venue = Venue(venue_slug='home-assignment-venue-helsinki')
     res = venue.getDynamicIfo()

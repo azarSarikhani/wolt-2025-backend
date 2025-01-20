@@ -80,6 +80,6 @@ def calculate_delivery_fee(
 
 if __name__ == "__main__":
     print("this function is happy to be called directly.")
-    config = uvicorn.Config("app:app", port=5000, log_level="info", reload=False, host='0.0.0.0')
+    config = uvicorn.Config("app:app", port=8080, log_level="info", reload=False, host='0.0.0.0')
     server = uvicorn.Server(config)
     server.run()
