@@ -78,5 +78,5 @@ jobs:
 
       - name: Run app
         run: |
-          source venv/bin/activate
+          source venv/wolt-2025/bin/activate
           python app/app.py
