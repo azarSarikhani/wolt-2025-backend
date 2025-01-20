@@ -28,9 +28,9 @@ def handle_failed_response(response: Response, url: str) -> NoReturn | dict:
 def get_nested_dict(_input: dict, keys: list) -> Any | None:
     try:
         for key in keys:
-            _input = _input.get(key)
+            _input = _input.get(key)  # type: ignore
     except AttributeError:
-        _input = None
+        _input = None  # type: ignore
     return _input
 
 
@@ -65,7 +65,7 @@ class Venue:
         s.mount('https://', adapter)
         s.mount('http://', adapter)
         if venueAuth().auth_required:
-            auth_header = venueAuth.get_token()
+            auth_header = venueAuth().get_token()
             s.headers.update(auth_header)
         self.session = s
 
