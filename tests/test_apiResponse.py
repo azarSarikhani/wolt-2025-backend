@@ -1,10 +1,81 @@
-# from src.app import app
-# from fastapi.testclient import TestClient
+from fastapi.testclient import TestClient
 
-from dopc.tools.Venue import Venue
+from app.app import app
 
 
-def test_validRequestResponseSchema():
-    venue = Venue(venue_slug='home-assignment-venue-helsinki')
-    res = venue.getDynamicIfo()
-    assert isinstance(res, dict)
+client = TestClient(app)
+
+
+def test_badRequestResponseCode():
+    response = client.get('/api/v1/delivery-order-price',
+                          params={'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2,
+                                  'user_lat': 2.1, 'user_lon': 3.1})
+    assert response.status_code == 400
+
+
+def test_validRequestResponseBody1():
+    response = client.get('/api/v1/delivery-order-price',
+                          params={'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2,
+                                  'user_lat': 60.17094, 'user_lon': 24.93087})
+    assert response.status_code == 200
+
+
+def test_invalidSlug():
+    response = client.get('/api/v1/delivery-order-price',
+                          params={'venue_slug': 'home-assignment-venue-planet-shlorp', 'cart_value': 2,
+                                  'user_lat': 60.17094, 'user_lon': 24.93087})
+    assert response.status_code == 400
+
+
+def test_validRequestResponseBody2():
+    response = client.get('/api/v1/delivery-order-price',
+                          params={'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2,
+                                  'user_lat': 60.17094, 'user_lon': 24.93087})
+    if response.json is not None:
+        assert True
+    else:
+        assert False
+
+
+def test_invalidQueryParam1():
+    response = client.get('/api/v1/delivery-order-price',
+                          params={'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2,
+                                  'user_lat': 'invalid latitude', 'user_lon': 3.1})
+    assert response.status_code == 422
+    assert "detail" in response.json()
+
+
+def test_missingQueryParam():
+    response = client.get('/api/v1/delivery-order-price',
+                          params={'cart_value': 2, 'user_lat': 2.1, 'user_lon': 3.1})
+    assert response.status_code == 422
+    assert "detail" in response.json()
+
+
+def test_emptyQueryParam():
+    response = client.get('/api/v1/delivery-order-price',
+                          params={'venue_slug': '', 'cart_value': 2, 'user_lat': 2.1, 'user_lon': 3.1})
+    assert response.status_code == 422
+    assert "detail" in response.json()
+
+
+def test_invalid_endpoint():
+    response = client.get("/api/v1/nonexistent-endpoint")
+    assert response.status_code == 404
+
+
+def test_invalid_http_method():
+    response = client.post(
+        "/api/v1/delivery-order-price",
+        json={"venue_slug": "valid-slug", "cart_value": 100, "user_lat": 60.192059, "user_lon": 24.945831},
+    )
+    assert response.status_code == 405
+
+
+def test_invalidQueryParam2():
+    response = client.get(
+        "/api/v1/delivery-order-price",
+        params={"venue_slug": 4, "cart_value": 2, "user_lat": "invalid latitude", "user_lon": 3.1},
+    )
+    assert response.status_code == 422
+    assert "detail" in response.json()

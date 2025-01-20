@@ -14,7 +14,8 @@ def getConsoleLoger(name: str) -> logging.Logger:
     mainLogger = logging.getLogger(name)
     level = loglevel[os.getenv('env') or 'dev']
     mainLogger.setLevel(level=level)
-    formatter = logging.Formatter('%(asctime)s | logger: %(name)s | line %(lineno)d  | %(funcName)s %(filename)s| %(levelname)s: %(message)s')
+    formatter = logging.Formatter('%(asctime)s | logger: %(name)s | line %(lineno)d  | \
+                                  %(funcName)s %(filename)s| %(levelname)s: %(message)s')
     stream_handler = logging.StreamHandler()
     stream_handler.setLevel(level=level)
     stream_handler.setFormatter(formatter)
