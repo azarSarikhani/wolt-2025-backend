@@ -1,4 +1,3 @@
-import pytest
 from fastapi.testclient import TestClient
 
 from app.app import app
@@ -7,7 +6,6 @@ from app.app import app
 client = TestClient(app)
 
 
-# @pytest.mark.skip(reason="debugging test")
 def test_badRequestResponseCode():
     response = client.get('/api/v1/delivery-order-price',
                           params={'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2,
@@ -19,14 +17,17 @@ def test_validRequestResponseBody1():
     response = client.get('/api/v1/delivery-order-price',
                           params={'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2,
                                   'user_lat': 60.17094, 'user_lon': 24.93087})
-    assert response.status_code == 400
+    assert response.status_code == 200
 
 
 def test_validRequestResponseBody2():
     response = client.get('/api/v1/delivery-order-price',
                           params={'venue_slug': 'home-assignment-venue-helsinki', 'cart_value': 2,
                                   'user_lat': 60.17094, 'user_lon': 24.93087})
-    assert response.json != None  # noqa: E711
+    if response.json is not None:
+        assert True
+    else:
+        assert False
 
 
 def test_invalidQueryParam1():

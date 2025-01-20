@@ -20,9 +20,6 @@ query_inputs_cases = [
                       'user_lat': 60.17094, 'user_lon': 24.93087}}
 ]
 
-# static_info = {'COORDINATES': [24.92813512, 60.17012143]}
-# dynamic_info = {'ORDER_MINIMUM_NO_SURCHARGE': 1000, 'BASE_PRICE': 190, 'DISTANCE_RANGES': [{'min': 0, 'max': 500, 'a': 0, 'b': 0.0, 'flag': None}, {'min': 500, 'max': 1000, 'a': 100, 'b': 0.0, 'flag': None}, {'min': 1000, 'max': 1500, 'a': 200, 'b': 0.0, 'flag': None}, {'min': 1500, 'max': 2000, 'a': 200, 'b': 1.0, 'flag': None}, {'min': 2000, 'max': 0, 'a': 0, 'b': 0.0, 'flag': None}]}
-
 
 @pytest.fixture(scope="module", autouse=True)
 def mock__static_dynamicInfo():
@@ -56,7 +53,6 @@ def test_rangesParams(cases, mock__static_dynamicInfo):
 def test_priceCalculator(query_inputs_cases, mock__static_dynamicInfo):
     dynamic_info, static_info = mock__static_dynamicInfo
     query_inputs = query_inputs_cases.get("query_inputs")
-    distance_ranges = dynamic_info.get('DISTANCE_RANGES')
     distance, price = priceCalculator(query_inputs, static_info, dynamic_info)
     assert distance == 177
     assert price == 190
