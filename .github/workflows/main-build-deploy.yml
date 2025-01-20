@@ -76,8 +76,18 @@ jobs:
           source venv/wolt-2025/bin/activate
           which python
           python -m pip install -e lib
+          #pip install -r requirements.txt
 
-      - name: Run app
+      - name: Test run the app
         run: |
           source venv/wolt-2025/bin/activate
           python app/app.py
+          APP_PID=$!  
+          sleep 10    
+          if kill -0 $APP_PID 2>/dev/null; then
+            echo "App is running successfully, stopping it now."
+            kill $APP_PID  # Gracefully terminate the app
+          else
+            echo "App failed to start."
+            exit 1 
+          fi
