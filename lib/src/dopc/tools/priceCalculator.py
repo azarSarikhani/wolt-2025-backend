@@ -1,7 +1,5 @@
-import sys
 import numpy as np
 import geopy.distance
-from dopc.tools.Venue import Venue
 from logging import Logger
 from dopc.tools.logs import getConsoleLoger
 

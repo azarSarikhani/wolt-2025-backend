@@ -33,15 +33,15 @@ def queryVenue(query_inputs: dict) -> tuple[dict]:
                     500: {"model": InternalError,
                           "description": "In case something goes wrong"}})
 def calculate_delivery_fee(
-                          venue_slug: Annotated[str, Query(min_length=1, description="The venue slug")],
-    					  cart_value: Annotated[int, Query(ge=0, description="The total value of the cart")],
-    					  user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude")],
-   						  user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude")] ):
+                            venue_slug: Annotated[str, Query(min_length=1, description="The venue slug")],
+                            cart_value: Annotated[int, Query(ge=0, description="The total value of the cart")],
+                            user_lat: Annotated[float, Query(ge=-90, le=90, description="The user's latitude")],
+                            user_lon: Annotated[float, Query(ge=-180, le=180, description="The user's longitude")]):
     try:
         query_inputs = {'venue_slug': venue_slug, 'cart_value': cart_value, 'user_lat': user_lat, 'user_lon': user_lon}
         dynamic_info, static_info = queryVenue(query_inputs)
-        distance , delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
-        small_order_surcharge = dynamic_info.get('ORDER_MINIMUM_NO_SURCHARGE') -  query_inputs.get('cart_value')
+        distance, delivery_price = priceCalculator(query_inputs, static_info, dynamic_info)
+        small_order_surcharge = dynamic_info.get('ORDER_MINIMUM_NO_SURCHARGE') - query_inputs.get('cart_value')
         if delivery_price:
             result = {
                 "total_price": cart_value + delivery_price,
@@ -62,7 +62,7 @@ def calculate_delivery_fee(
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail='delivery not possible, distance is too long'
-            )            
+            )
     except Exception as e:
         if not isinstance(e, HTTPException):
             appLogger.error(e)
@@ -76,6 +76,7 @@ def calculate_delivery_fee(
                 status_code=e.status_code,
                 detail=e.detail
             )
+
 
 if __name__ == "__main__":
     print("this function is happy to be called directly.")

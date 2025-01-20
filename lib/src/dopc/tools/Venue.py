@@ -100,7 +100,6 @@ class Venue:
                 parsed_info.update({item.name: value})
         return parsed_info
 
-
     def parseVenueStaticInfo(self, response_dict: dict):
         parsed_info: dict = {}
         items_to_collect = [
@@ -111,4 +110,3 @@ class Venue:
             if value:
                 parsed_info.update({item.name: value})
         return parsed_info
-    
