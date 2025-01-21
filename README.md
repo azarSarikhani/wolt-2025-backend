@@ -22,28 +22,28 @@ based on the requirements specified in wolt 2025 subject instruction.
 To run the API locally, go to the root of the repo. We can create a virtual environmrnt then run the app, but if you are happy with pip installing all of the packages just run:
 
 ```bash
-	python3 -m pip install -e lib
-	python3 app/app.py
+python3 -m pip install -e lib
+python3 app/app.py
 ```
 
 To create a virtual environment:
 
 ```bash
-	mkdir venv
-    python3 -m venv venv/wolt-2025
-    source venv/wolt-2025/bin/activate
+mkdir venv
+python3 -m venv venv/wolt-2025
+source venv/wolt-2025/bin/activate
 ```
 
 To run the tests locally, go to the root of the repo and run: 
 
 ```bash
-	pip install nox
-	nox
+pip install nox
+nox
 ```
 
 
 To run the docker container, go to the root of the repo and run:
 
 ```bash
-	docker compose up --build
+docker compose up --build
 ```
